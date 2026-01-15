@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Gear Catalog | GEARPRO</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@500;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/categories.css" />
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <script src="../src/categories/headset.js"></script>
+  </head>
+  <body x-data="audioProducts">
+    <nav>
+      <a href="#" class="logo">GEARPRO</a>
+      <input type="checkbox" id="menu-toggle" />
+      <label for="menu-toggle" class="hamburger">
+        <span></span><span></span><span></span>
+      </label>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#categories">Categories</a>
+      </div>
+    </nav>
+
+    <header class="hero-category">
+      <h1>HEADSET CATALOG</h1>
+      <p>Pro Audio, IEM, and Gaming Headset Collection.</p>
+    </header>
+
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Cari audio (ex: 'IEM', 'Surround', 'LCP')..."
+        x-model="searchQuery"
+      />
+    </div>
+
+    <section class="container">
+      <div class="grid">
+        <template x-for="item in filteredAudio" :key="item.id">
+          <div class="card">
+            <div class="category-tag" x-text="item.category"></div>
+            <img
+              :src="item.img"
+              :alt="item.name"
+              onerror="this.src='https://placehold.co/400x400/111/00f2ff?text=Audio+Gear'"
+            />
+            <div class="card-body">
+              <h3 x-text="item.name"></h3>
+              <button class="btn-detail" @click="openModal(item)">
+                SPEC DETAILS
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div class="no-results" x-show="filteredAudio.length === 0">
+        Audio gear tidak ditemukan. Coba kata kunci lain.
+      </div>
+    </section>
+
+    <div
+      class="modal-overlay"
+      x-show="showModal"
+      x-transition.opacity
+      style="display: none"
+      @click.away="showModal = false"
+    >
+      <div class="modal-content" @click.stop>
+        <span class="close-modal" @click="showModal = false">&times;</span>
+
+        <div class="modal-grid" x-show="selected">
+          <div class="modal-image">
+            <img
+            :src="selected?.img"
+            :alt="selected?.name"
+            onerror="this.src='https://placehold.co/400x400/111/00f2ff?text=Audio+Gear'"
+            />
+          </div>
+          <div class="modal-info">
+            <h2 x-text="selected?.name"></h2>
+            <p>Rank: <span x-text="'Tier ' + selected?.tier"></span></p>
+            <table class="spec-table">
+              <template x-if="selected">
+                <template x-for="(value, label) in selected.specs" :key="label">
+                  <tr>
+                    <td
+                      class="spec-label"
+                      x-text="label.replace('_', ' ')"
+                    ></td>
+                    <td class="spec-value" x-text="value"></td>
+                  </tr>
+                </template>
+              </template>
+            </table>
+            <div class="aff-btns">
+              <a :href="selected?.link || '#'" target="_blank" class="shopee"
+                >SHOPEE OFFICIAL</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo">GEARPRO</div>
+          <p>Panduan terpercaya untuk gear gaming Anda.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <a href="../index.html">Home</a>
+          <a href="../index.html#choose">Why Us</a>
+          <a href="../index.html#tier-builder">Tier List</a>
+        </div>
+        <div class="footer-col">
+          <h4>Social</h4>
+          <a href="#">Instagram</a>
+          <a href="#">Discord</a>
+          <a href="#">TikTok</a>
+        </div>
+      </div>
+      <div class="disclaimer">&copy; 2025 GEARPRO</div>
+    </footer>
+  </body>
+</html>

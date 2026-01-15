@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gamepad Catalog | GEARPRO</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@500;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/categories.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <script src="../src/categories/gamepad.js"></script>
+  </head>
+  <body x-data="gamepadProducts">
+    <nav>
+      <a href="#" class="logo">GEARPRO</a>
+      <input type="checkbox" id="menu-toggle" />
+      <label for="menu-toggle" class="hamburger">
+        <span></span><span></span><span></span>
+      </label>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#categories">Categories</a>
+      </div>
+    </nav>
+
+    <header class="hero-category">
+      <h1>GAMEPAD CATALOG</h1>
+      <p>Precision Control with Hall-Effect Technology.</p>
+    </header>
+
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by name, platform (PC, Switch), or tech..."
+        x-model="searchQuery"
+      />
+    </div>
+
+    <section class="container">
+      <div class="grid">
+        <template x-for="gp in filteredGamepads" :key="gp.id">
+          <div class="card">
+            <template x-if="gp.specs.tech.toLowerCase().includes('hall')">
+              <div class="tech-badge">HALL EFFECT</div>
+            </template>
+
+            <img
+              :src="gp.img"
+              :alt="gp.name"
+              onerror="this.src='https://placehold.co/500x400/111/00f2ff?text=Gamepad+Image'"
+            />
+
+            <div class="card-body">
+              <h3 x-text="gp.name"></h3>
+              <button class="btn-detail" @click="openModal(gp)">
+                VIEW SPECS
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div class="no-results" x-show="filteredGamepads.length === 0">
+        No controllers found for your search.
+      </div>
+    </section>
+
+    <div
+      class="modal-overlay"
+      x-show="showModal"
+      x-transition.opacity
+      style="display: none"
+      @click.away="showModal = false"
+    >
+      <div class="modal-content" @click.stop>
+        <span class="close-modal" @click="showModal = false">&times;</span>
+
+        <div class="modal-grid" x-show="selected">
+          <div class="modal-image">
+            <img
+            :src="selected?.img"
+            :alt="selected?.name"
+           onerror="this.src='https://placehold.co/500x400/111/00f2ff?text=Gamepad+Controller'"
+            />
+          </div>
+          <div class="modal-info">
+            <h2 x-text="selected?.name"></h2>
+            <p>Rank: <span x-text="'Tier ' + selected?.tier"></span></p>
+            <table class="spec-table">
+              <template x-if="selected">
+                <template x-for="(value, label) in selected.specs" :key="label">
+                  <tr>
+                    <td
+                      class="spec-label"
+                      x-text="label.replace('_', ' ')"
+                    ></td>
+                    <td class="spec-value">
+                      <template x-if="Array.isArray(value)">
+                        <div>
+                          <template x-for="feat in value">
+                            <span class="feature-tag" x-text="feat"></span>
+                          </template>
+                        </div>
+                      </template>
+                      <template x-if="!Array.isArray(value)">
+                        <span x-text="value"></span>
+                      </template>
+                    </td>
+                  </tr>
+                </template>
+              </template>
+            </table>
+            <div class="aff-btns">
+              <a :href="selected?.link || '#'" target="_blank" class="shopee">SHOOPEE OFFICIAL</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

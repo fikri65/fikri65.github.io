@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mouse Catalog | GEARPRO</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@500;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/categories.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <script src="../src/categories/mouse.js"></script>
+  </head>
+  <body x-data="mouseProducts">
+    <nav>
+      <a href="#" class="logo">GEARPRO</a>
+      <input type="checkbox" id="menu-toggle" />
+      <label for="menu-toggle" class="hamburger">
+        <span></span><span></span><span></span>
+      </label>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#categories">Categories</a>
+      </div>
+    </nav>
+
+    <header class="hero-category">
+      <h1>MOUSE CATALOG</h1>
+      <p>Ultralight, Flagship, and Ergonomic Gaming Mice.</p>
+    </header>
+
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search mouse (e.g. '3395', 'Logitech', '48g')..."
+        x-model="searchQuery"
+      />
+    </div>
+
+    <section class="container">
+      <div class="grid">
+        <template x-for="mouse in filteredMice" :key="mouse.id">
+          <div class="card">
+            <div class="category-tag" x-text="mouse.category"></div>
+            <img
+              :src="mouse.img"
+              :alt="mouse.name"
+              onerror="this.src='https://placehold.co/400x400/111/00f2ff?text=Mouse+Image'"
+            />
+            <div class="card-body">
+              <h3 x-text="mouse.name"></h3>
+              <button class="btn-detail" @click="openModal(mouse)">
+                SPEC DETAILS
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <div
+      class="modal-overlay"
+      x-show="showModal"
+      x-transition.opacity
+      style="display: none"
+      @click.away="showModal = false"
+    >
+      <div class="modal-content" @click.stop>
+        <span class="close-modal" @click="showModal = false">&times;</span>
+
+        <div class="modal-grid" x-show="selected">
+          <div class="modal-image">
+            <img
+              :src="selected?.img"
+              :alt="selected?.name"
+              onerror="this.src='https://placehold.co/400x400/111/00f2ff?text=Mouse+Image'"
+            />
+          </div>
+          <div class="modal-info">
+            <h2 x-text="selected?.name"></h2>
+            <p>Rank: <span x-text="'Tier ' + selected?.tier"></span></p>
+            <div class="spec-section">
+              <div class="spec-title">SENSOR SPECS</div>
+              <table class="spec-table">
+                <template
+                  x-for="(val, key) in selected?.specs.sensor"
+                  :key="key"
+                >
+                  <tr>
+                    <td class="spec-label" x-text="key"></td>
+                    <td class="spec-value" x-text="val"></td>
+                  </tr>
+                </template>
+              </table>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-title">BUILD & DESIGN</div>
+              <table class="spec-table">
+                <template
+                  x-for="(val, key) in selected?.specs.build"
+                  :key="key"
+                >
+                  <tr>
+                    <td class="spec-label" x-text="key"></td>
+                    <td
+                      class="spec-value"
+                      x-text="Array.isArray(val) ? val.join(', ') : val"
+                    ></td>
+                  </tr>
+                </template>
+              </table>
+            </div>
+
+            <template x-if="selected?.specs.features">
+              <div class="spec-section">
+                <div class="spec-title">KEY FEATURES</div>
+                <ul class="feature-list">
+                  <template x-for="feat in selected.specs.features">
+                    <li x-text="feat"></li>
+                  </template>
+                </ul>
+              </div>
+            </template>
+
+            <div class="aff-btns">
+              <a :href="selected?.link || '#'" target="_blank" class="shopee"
+                >SHOPEE OFFICIAL</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo">GEARPRO</div>
+          <p>Panduan terpercaya untuk gear gaming Anda.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <a href="../index.html">Home</a>
+          <a href="../index.html#choose">Why Us</a>
+          <a href="../index.html#tier-builder">Tier List</a>
+        </div>
+        <div class="footer-col">
+          <h4>Social</h4>
+          <a href="#">Instagram</a>
+          <a href="#">Discord</a>
+          <a href="#">TikTok</a>
+        </div>
+      </div>
+      <div class="disclaimer">&copy; 2025 GEARPRO</div>
+    </footer>
+  </body>
+</html>
